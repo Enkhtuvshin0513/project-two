@@ -1,5 +1,4 @@
 import express from "express";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { Users } from "../../../db/models/Users.js";
 
@@ -9,17 +8,10 @@ userRoutes.post("/register", async (req, res) => {
   try {
     const { password, email } = req.body;
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const user = await Users.register({ email, password });
+    const token = user.getToken();
 
-    const doc = {
-      email,
-      password: hashedPassword
-    };
-
-    const user = await Users.create(doc);
-
-    res.send(user.getToken());
+    res.send(token);
   } catch (e) {
     res.send(e.message);
   }
