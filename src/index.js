@@ -9,6 +9,10 @@ const app = express();
 const authMiddleware = (req, res, next) => {
   const authHeader = req.headers["authorization"];
 
+  if (!authHeader) {
+    res.send("Token!!");
+  }
+
   const token = authHeader.split(" ")[1];
 
   try {
