@@ -13,6 +13,8 @@ mongoose.connect(process.env.MONGO_URL).then(() => {
 
 const app = express();
 
+app.use(express.json());
+
 const authMiddleware = (req, res, next) => {
   const authHeader = req.headers["authorization"];
 
@@ -39,7 +41,6 @@ app.use("/data", authMiddleware);
 
 app.get("/data/get-data", (req, res) => {
   const { user } = req;
-  console.log(user);
 
   const data = [{ name: "1" }];
   res.send(data);

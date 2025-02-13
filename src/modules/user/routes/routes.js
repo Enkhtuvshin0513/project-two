@@ -6,7 +6,7 @@ export const userRoutes = express.Router();
 
 userRoutes.post("/register", async (req, res) => {
   try {
-    const user = await Users.create(req.query);
+    const user = await Users.create(req.body);
     res.send(user);
   } catch (e) {
     res.send(e.message);
@@ -14,13 +14,11 @@ userRoutes.post("/register", async (req, res) => {
 });
 
 userRoutes.post("/login", async (req, res) => {
-  const { password, email } = req.query;
+  const { password, email } = req.body;
 
   const user = await Users.findOne({ email });
 
   user.password = password;
-
-  console.log(user);
 
   const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY);
 
