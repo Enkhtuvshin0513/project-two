@@ -7,6 +7,22 @@ import { userRoutes } from "./modules/user/routes/routes.js";
 
 dotenv.config();
 
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+
+  sayHi() {
+    console.log(`sainuu bi ${this.name} bn`);
+
+    this.sayBey();
+  }
+
+  sayBey() {
+    console.log("Bayartai");
+  }
+}
+
 mongoose.connect(process.env.MONGO_URL).then(() => {
   console.log("connected to MONGO");
 });
@@ -44,6 +60,14 @@ app.get("/data/get-data", (req, res) => {
 
   const data = [{ name: "1" }];
   res.send(data);
+});
+
+app.get("/jishee", (req, res) => {
+  const person = new Person("bat");
+
+  person.sayHi();
+
+  res.send("success");
 });
 
 app.get("/login", (req, res) => {

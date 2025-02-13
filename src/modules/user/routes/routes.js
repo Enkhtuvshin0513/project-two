@@ -18,7 +18,8 @@ userRoutes.post("/register", async (req, res) => {
     };
 
     const user = await Users.create(doc);
-    res.send(user);
+
+    res.send(user.getToken());
   } catch (e) {
     res.send(e.message);
   }
@@ -27,14 +28,23 @@ userRoutes.post("/register", async (req, res) => {
 userRoutes.post("/login", async (req, res) => {
   const { password, email } = req.body;
 
-  const user = await Users.findOne({ email });
+  try {
+    const token = await Users.login({ email, password });
 
-  const valid = await bcrypt.compare(password, user.password);
-
-  if (valid) {
-    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY);
     res.send(token);
-  } else {
-    res.send("password buruu");
+  } catch (e) {
+    res.send(e.message);
+  }
+});
+
+userRoutes.get("/get-token", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await Users.findOne({ email });
+
+    res.send(user.getToken());
+  } catch (e) {
+    res.send(e.message);
   }
 });
